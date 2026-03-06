@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+
+    /* Strict */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+
+    /* Module */
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+
+    /* Types */
+    "types": ["node", "vite/client"],
+
+    /* Path aliases — must match vite.config.ts */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@engine/*": ["src/features/game-engine/*"],
+      "@ui/*": ["src/features/game-ui/*"],
+      "@config/*": ["src/shared/config/*"]
+    },
+
+    /* Output — handled by Vite, not tsc */
+    "noEmit": true,
+
+    /* Interop */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "tests", "vite.config.ts", "eslint.config.js"],
+  "exclude": ["node_modules", "dist"]
+}

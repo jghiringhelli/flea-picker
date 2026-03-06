@@ -1,0 +1,80 @@
+/* =============================================================================
+   Design Tokens — Flea Picker
+   Single source of truth for all colours, spacing, and typography.
+   Used by Tailwind CSS via @theme and by runtime code via CSS custom properties.
+   ============================================================================= */
+
+@import "tailwindcss";
+
+@theme {
+  /* ── Colour Palette ──────────────────────────────────────────────────── */
+  --color-fur:       #c4a265;   /* Dog fur base — warm tan */
+  --color-fur-dark:  #8b6914;   /* Deep fur variation */
+  --color-fur-light: #e0c898;   /* Light fur highlight */
+
+  --color-flea:      #1a0a00;   /* Flea sprite base — near-black brown */
+  --color-flea-dim:  #0d0500;   /* Camouflaged flea */
+
+  --color-accent:    #e85d04;   /* Primary CTA, combo badge ×2 */
+  --color-accent-2:  #f4a261;   /* Secondary warm accent */
+
+  --color-success:   #2d6a4f;   /* Catch feedback, combo ×3 */
+  --color-success-light: #52b788;
+
+  --color-danger:    #d62828;   /* Miss feedback, timer warning */
+  --color-danger-light: #e07070;
+
+  --color-gold:      #f4b942;   /* Combo ×5 / streak badge */
+  --color-gold-light:#ffd166;
+
+  --color-hud-bg:    #1c1410;   /* HUD bar background */
+  --color-hud-text:  #f5e6c8;   /* HUD text — warm white */
+
+  --color-canvas-bg: #e8d5b0;   /* Canvas background before dog texture */
+  --color-overlay-bg: rgba(10, 6, 2, 0.75); /* Modal / pause overlay */
+
+  /* ── Spacing (game-specific additions) ───────────────────────────────── */
+  --spacing-hud:     3rem;      /* HUD bar height */
+  --spacing-toolbar: 4rem;      /* Toolbar height */
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
+  --font-sans:  'Nunito', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Fredoka One', 'Nunito', sans-serif;
+
+  --font-size-hud:   0.875rem;  /* 14px — HUD labels */
+  --font-size-score: 1.25rem;   /* 20px — score display */
+  --font-size-combo: 2rem;      /* 32px — combo badge */
+
+  /* ── Border radius ───────────────────────────────────────────────────── */
+  --radius-tool:  0.5rem;
+  --radius-card:  1rem;
+  --radius-badge: 9999px;
+
+  /* ── Shadows ─────────────────────────────────────────────────────────── */
+  --shadow-canvas: 0 8px 32px rgba(0,0,0,0.4);
+  --shadow-badge:  0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* ── Base styles ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-canvas-bg);
+  font-family: var(--font-sans);
+  color: var(--color-hud-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Reduced-motion override ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
