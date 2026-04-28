@@ -40,7 +40,7 @@ export class FleaMovementSystem implements System {
 
     for (const id of ids) {
       const jumpState = world.getComponent<JumpStateComponent>(id, COMPONENT_KEYS.JUMP_STATE);
-      if (!jumpState || jumpState.state !== 'idle') continue;
+      if (jumpState?.state !== 'idle') continue;
 
       // Do not move frozen fleas.
       const frozen = world.getComponent<FrozenComponent>(id, COMPONENT_KEYS.FROZEN);

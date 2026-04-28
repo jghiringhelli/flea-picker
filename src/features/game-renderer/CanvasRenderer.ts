@@ -49,7 +49,7 @@ interface PatchDef {
 }
 
 /** Deterministic calico patch layout — never changes between frames. */
-const CALICO_PATCHES: ReadonlyArray<PatchDef> = [
+const CALICO_PATCHES: readonly PatchDef[] = [
   { cx: 558, cy: 192, rx: 92, ry: 65, color: '#1a0a00', isDark: true  },
   { cx: 368, cy: 340, rx: 104, ry: 65, color: '#c85a10', isDark: false },
   { cx: 250, cy: 208, rx: 58,  ry: 44, color: '#1a0a00', isDark: true  },
@@ -159,7 +159,7 @@ export class CanvasRenderer {
    * @param _alpha   - Render interpolation alpha (reserved for future sub-step lerp).
    * @param combPath - Comb drag path currently in progress (empty if not dragging).
    */
-  render(world: GameWorld, _alpha: number, combPath: ReadonlyArray<Point> = []): void {
+  render(world: GameWorld, _alpha: number, combPath: readonly Point[] = []): void {
     this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     this.drawBackground();
     this.drawPet();
@@ -548,7 +548,7 @@ export class CanvasRenderer {
       const frozen = world.getComponent<FrozenComponent>(id, COMPONENT_KEYS.FROZEN);
       const isFrozen = frozen !== undefined && frozen.remainingMs > 0;
       // Freeze progress 0→1 used to lerp ice ring opacity (fades out at end).
-      const freezeFrac = isFrozen ? Math.min(1, frozen!.remainingMs / FLEA_SPRAY_DURATION_MS) : 0;
+      const freezeFrac = isFrozen ? Math.min(1, frozen.remainingMs / FLEA_SPRAY_DURATION_MS) : 0;
 
       // Cosmetic arc lift: add upward parabola on top of physics Y
       const arcHeight = jump.state === 'fleeing' ? FLEE_ARC_HEIGHT : JUMP_ARC_HEIGHT;
@@ -600,18 +600,21 @@ export class CanvasRenderer {
     }
   }
 
-  private drawCombPath(points: ReadonlyArray<Point>): void {
+  private drawCombPath(points: readonly Point[]): void {
     if (points.length < 2) return;
     const ctx = this.ctx;
+    const first = points[0];
+    if (!first) return;
     ctx.save();
     ctx.strokeStyle = 'rgba(80,160,255,0.5)';
     ctx.lineWidth = COMB_SWEEP_WIDTH;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.beginPath();
-    ctx.moveTo(points[0]!.x, points[0]!.y);
+    ctx.moveTo(first.x, first.y);
     for (let i = 1; i < points.length; i++) {
-      ctx.lineTo(points[i]!.x, points[i]!.y);
+      const pt = points[i];
+      if (pt) ctx.lineTo(pt.x, pt.y);
     }
     ctx.stroke();
     ctx.restore();
@@ -622,7 +625,8 @@ export class CanvasRenderer {
     const now = performance.now();
 
     for (let i = this.effects.length - 1; i >= 0; i--) {
-      const e = this.effects[i]!;
+      const e = this.effects[i];
+      if (!e) continue;
       const elapsed = now - e.startTime;
 
       if (elapsed >= e.maxTtl) {

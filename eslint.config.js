@@ -5,7 +5,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'node_modules'] },
+  { ignores: ['dist', 'dist-types', 'coverage', 'node_modules', 'eslint.config.js', 'vite.config.ts'] },
 
   // Base JS rules
   js.configs.recommended,
@@ -53,8 +53,14 @@ export default tseslint.config(
         fixStyle: 'inline-type-imports',
       }],
 
+      // Allow numbers in template literals (common in canvas/game code)
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
+
+      // Allow unused args prefixed with _
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+
       // Code quality
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       'no-debugger': 'error',
       'prefer-const': 'error',
       'no-var': 'error',

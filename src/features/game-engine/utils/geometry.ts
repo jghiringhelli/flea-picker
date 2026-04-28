@@ -32,20 +32,24 @@ export function distanceBetween(a: Point, b: Point): number {
  * @param step   - Interval in pixels between consecutive samples.
  * @returns      - Array of uniformly spaced sample points including the start.
  */
-export function samplePath(points: ReadonlyArray<Point>, step: number): readonly Point[] {
+export function samplePath(points: readonly Point[], step: number): readonly Point[] {
   if (points.length === 0) return [];
-  if (points.length === 1) return [{ x: points[0]!.x, y: points[0]!.y }];
+  const firstPoint = points[0];
+  if (!firstPoint) return [];
+  if (points.length === 1) return [{ x: firstPoint.x, y: firstPoint.y }];
 
   // Build cumulative length table.
   const cumLen: number[] = [0];
   for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1]!;
-    const curr = points[i]!;
-    cumLen.push(cumLen[i - 1]! + distanceBetween(prev, curr));
+    const prev = points[i - 1];
+    const curr = points[i];
+    if (!prev || !curr) continue;
+    const prevLen = cumLen[i - 1] ?? 0;
+    cumLen.push(prevLen + distanceBetween(prev, curr));
   }
 
-  const total = cumLen[cumLen.length - 1]!;
-  if (total === 0) return [{ x: points[0]!.x, y: points[0]!.y }];
+  const total = cumLen[cumLen.length - 1] ?? 0;
+  if (total === 0) return [{ x: firstPoint.x, y: firstPoint.y }];
 
   const samples: Point[] = [];
 
@@ -55,16 +59,18 @@ export function samplePath(points: ReadonlyArray<Point>, step: number): readonly
     let hi = cumLen.length - 1;
     while (lo < hi - 1) {
       const mid = (lo + hi) >> 1;
-      if (cumLen[mid]! <= dist) lo = mid;
+      if ((cumLen[mid] ?? 0) <= dist) lo = mid;
       else hi = mid;
     }
 
-    const segStart = cumLen[lo]!;
-    const segLen = cumLen[hi]! - segStart;
+    const segStart = cumLen[lo] ?? 0;
+    const segEnd = cumLen[hi] ?? 0;
+    const segLen = segEnd - segStart;
     const t = segLen === 0 ? 0 : (dist - segStart) / segLen;
 
-    const a = points[lo]!;
-    const b = points[hi]!;
+    const a = points[lo];
+    const b = points[hi];
+    if (!a || !b) continue;
     samples.push({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
   }
 

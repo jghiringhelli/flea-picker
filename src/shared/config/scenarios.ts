@@ -13,7 +13,7 @@ import type { PetType } from './PetConfig';
 
 // ── Dog path (golden → dark-brown) ──────────────────────────────────────────
 
-const SCENARIOS_DOG: ReadonlyArray<ScenarioConfig> = [
+const SCENARIOS_DOG: readonly ScenarioConfig[] = [
   {
     id: 1,
     name: 'Drowsy Pup',
@@ -170,7 +170,7 @@ const SCENARIOS_DOG: ReadonlyArray<ScenarioConfig> = [
 // ── Cat path (silver → charcoal) ─────────────────────────────────────────────
 // Cats are nimble: higher base speeds and faster jump arcs than the dog path.
 
-const SCENARIOS_CAT: ReadonlyArray<ScenarioConfig> = [
+const SCENARIOS_CAT: readonly ScenarioConfig[] = [
   {
     id: 1, name: 'Lazy Napper',
     fleaCount: 5, jumpIntervalMs: 3000, jumpDurationMs: 560, jumpDistancePx: 55,
@@ -248,7 +248,7 @@ const SCENARIOS_CAT: ReadonlyArray<ScenarioConfig> = [
 // Flea opacity on dark patches is multiplied ×0.35 on top of camouflageOpacity,
 // so early levels already feel significantly harder despite full camouflageOpacity.
 
-const SCENARIOS_CALICO: ReadonlyArray<ScenarioConfig> = [
+const SCENARIOS_CALICO: readonly ScenarioConfig[] = [
   {
     id: 1, name: 'Spotted Napper',
     fleaCount: 7, jumpIntervalMs: 2800, jumpDurationMs: 540, jumpDistancePx: 58,
@@ -323,7 +323,7 @@ const SCENARIOS_CALICO: ReadonlyArray<ScenarioConfig> = [
 
 // ── Exports ───────────────────────────────────────────────────────────────────
 
-export const SCENARIOS_BY_PET: Readonly<Record<PetType, ReadonlyArray<ScenarioConfig>>> = {
+export const SCENARIOS_BY_PET: Readonly<Record<PetType, readonly ScenarioConfig[]>> = {
   dog:          SCENARIOS_DOG,
   cat:          SCENARIOS_CAT,
   'calico-cat': SCENARIOS_CALICO,

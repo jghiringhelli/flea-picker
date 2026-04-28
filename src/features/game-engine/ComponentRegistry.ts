@@ -58,7 +58,7 @@ export class ComponentRegistry<T> {
    * @returns A readonly array snapshot. Mutations to the returned array do not
    *          affect the registry.
    */
-  all(): ReadonlyArray<readonly [EntityId, T]> {
+  all(): readonly (readonly [EntityId, T])[] {
     return Array.from(this.store.entries()).map(([id, c]) => [id, c] as const);
   }
 

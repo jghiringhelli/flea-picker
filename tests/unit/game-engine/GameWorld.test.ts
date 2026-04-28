@@ -43,7 +43,7 @@ describe('GameWorld', () => {
 
   it('destroyEntity throws EntityNotFoundError for unknown id', () => {
     const unknown = createEntityId();
-    expect(() => world.destroyEntity(unknown)).toThrow(EntityNotFoundError);
+    expect(() => { world.destroyEntity(unknown); }).toThrow(EntityNotFoundError);
   });
 
   // ── Component management ────────────────────────────────────────────────
@@ -77,9 +77,9 @@ describe('GameWorld', () => {
 
   it('addComponent throws EntityNotFoundError for unknown entity', () => {
     const unknown = createEntityId();
-    expect(() =>
-      world.addComponent<PositionComponent>(unknown, 'position', { x: 0, y: 0 }),
-    ).toThrow(EntityNotFoundError);
+    expect(() => {
+      world.addComponent<PositionComponent>(unknown, 'position', { x: 0, y: 0 });
+    }).toThrow(EntityNotFoundError);
   });
 
   // ── Archetype queries ───────────────────────────────────────────────────

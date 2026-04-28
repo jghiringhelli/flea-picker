@@ -55,7 +55,24 @@ export default defineConfig({
       },
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
+        // Entry point
         'src/app/main.tsx',
+        // Browser-only / React UI — covered by E2E tests (Playwright)
+        'src/app/**',
+        'src/features/game-ui/**',
+        'src/features/game-renderer/**',
+        // Requires requestAnimationFrame — not unit-testable in jsdom
+        'src/features/game-engine/ScenarioEngine.ts',
+        // XState machine — integration/E2E territory
+        'src/features/game-state/**',
+        // Interface-only files — no executable code
+        'src/features/game-engine/System.ts',
+        'src/features/game-engine/components/**',
+        'src/shared/config/ScenarioConfig.ts',
+        'src/shared/config/PetConfig.ts',
+        // Barrel re-exports — no executable code
+        'src/**/*index.ts',
+        // Type declarations and test files
         'src/**/*.d.ts',
         'src/**/*.test.{ts,tsx}',
         'src/**/__tests__/**',

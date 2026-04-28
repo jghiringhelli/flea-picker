@@ -71,9 +71,9 @@ export function GameCanvas({ scenario, activeTool, isPaused, onToolSelect, petTy
         onFleaMissed: (score, misses) => {
           send({ type: 'FLEA_MISSED', newScore: score, misses });
         },
-        onAllCaught: () => send({ type: 'ALL_FLEAS_CAUGHT' }),
-        onTimerExpired: () => send({ type: 'TIMER_EXPIRED' }),
-        onTimeTick: (timeRemaining) => send({ type: 'TIME_TICK', timeRemaining }),
+        onAllCaught: () => { send({ type: 'ALL_FLEAS_CAUGHT' }); },
+        onTimerExpired: () => { send({ type: 'TIMER_EXPIRED' }); },
+        onTimeTick: (timeRemaining) => { send({ type: 'TIME_TICK', timeRemaining }); },
       },
       renderer,
     );

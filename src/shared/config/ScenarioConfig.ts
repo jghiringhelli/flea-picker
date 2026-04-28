@@ -69,8 +69,8 @@ export interface ScenarioConfig {
   readonly furColor: string;
 
   /** Tools available to the player in this scenario. */
-  readonly availableTools: ReadonlyArray<ToolType>;
+  readonly availableTools: readonly ToolType[];
 
   /** Power-ups the player may activate during this scenario. */
-  readonly powerUps: ReadonlyArray<PowerUpType>;
+  readonly powerUps: readonly PowerUpType[];
 }

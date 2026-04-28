@@ -10,7 +10,7 @@ import type { ToolType } from '@config/ScenarioConfig';
 
 interface ToolBarProps {
   /** Tools available in the current scenario. */
-  readonly availableTools: ReadonlyArray<ToolType>;
+  readonly availableTools: readonly ToolType[];
   /** Currently active tool. */
   readonly activeTool: ToolType;
   /** Called when the player selects a different tool. */
@@ -43,7 +43,7 @@ export function ToolBar({ availableTools, activeTool, onToolSelect }: ToolBarPro
       }
     };
     window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    return () => { window.removeEventListener('keydown', handler); };
   }, [availableTools, onToolSelect]);
 
   return (
@@ -54,7 +54,7 @@ export function ToolBar({ availableTools, activeTool, onToolSelect }: ToolBarPro
         return (
           <button
             key={tool}
-            onClick={() => onToolSelect(tool)}
+            onClick={() => { onToolSelect(tool); }}
             aria-pressed={isActive}
             aria-label={`${label} (${shortcut})`}
             className={[

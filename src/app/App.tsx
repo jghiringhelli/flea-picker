@@ -103,7 +103,7 @@ function AppRoutes(): ReactElement {
           {(['dog', 'cat', 'calico-cat'] as const).map((pt) => (
             <button
               key={pt}
-              onClick={() => handlePetTypeChange(pt)}
+              onClick={() => { handlePetTypeChange(pt); }}
               aria-pressed={pt === petType}
               className={[
                 'flex flex-col items-center px-5 py-3 rounded-xl border-2 transition-all select-none',
@@ -122,7 +122,7 @@ function AppRoutes(): ReactElement {
         </div>
 
         <button
-          onClick={() => send({ type: 'PLAY_CLICKED' })}
+          onClick={() => { send({ type: 'PLAY_CLICKED' }); }}
           className="px-10 py-4 bg-amber-500 hover:bg-amber-400 text-black font-bold text-xl rounded-xl transition-all hover:scale-105"
         >
           Play
@@ -139,20 +139,21 @@ function AppRoutes(): ReactElement {
         scenarios={activeScenarios}
         petType={petType}
         onSelect={(id) => {
-          const s = activeScenarios.find((sc) => sc.id === id)!;
+          const s = activeScenarios.find((sc) => sc.id === id);
+          if (!s) return;
           const firstTool = s.availableTools[0] ?? 'tweezers';
           setActiveTool(firstTool);
           send({ type: 'SCENARIO_CHOSEN', scenarioId: id, totalFleas: s.fleaCount, timeLimitSec: s.timeLimitSec });
         }}
-        onBack={() => send({ type: 'BACK' })}
+        onBack={() => { send({ type: 'BACK' }); }}
       />
     );
   }
 
   // ── Playing + paused ───────────────────────────────────────────────────────
   if (isPlaying || isPaused) {
-    const handlePause = (): void => send({ type: 'PAUSE' });
-    const handleResume = (): void => send({ type: 'RESUME' });
+    const handlePause = (): void => { send({ type: 'PAUSE' }); };
+    const handleResume = (): void => { send({ type: 'RESUME' }); };
 
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4">
@@ -180,7 +181,7 @@ function AppRoutes(): ReactElement {
                 Resume
               </button>
               <button
-                onClick={() => send({ type: 'QUIT' })}
+                onClick={() => { send({ type: 'QUIT' }); }}
                 className="px-8 py-3 bg-gray-700 text-white rounded-lg"
               >
                 Quit
@@ -226,8 +227,8 @@ function AppRoutes(): ReactElement {
         fleasRemaining={0}
         timeRemaining={state.context.timeRemaining}
         hasNextScenario={currentScenario.id < SCENARIOS.length}
-        onNextScenario={() => send({ type: 'NEXT_SCENARIO' })}
-        onMainMenu={() => send({ type: 'MAIN_MENU' })}
+        onNextScenario={() => { send({ type: 'NEXT_SCENARIO' }); }}
+        onMainMenu={() => { send({ type: 'MAIN_MENU' }); }}
       />
     );
   }
@@ -244,8 +245,8 @@ function AppRoutes(): ReactElement {
         fleasRemaining={state.context.fleasRemaining}
         timeRemaining={0}
         hasNextScenario={false}
-        onNextScenario={() => send({ type: 'NEXT_SCENARIO' })}
-        onMainMenu={() => send({ type: 'MAIN_MENU' })}
+        onNextScenario={() => { send({ type: 'NEXT_SCENARIO' }); }}
+        onMainMenu={() => { send({ type: 'MAIN_MENU' }); }}
       />
     );
   }

@@ -25,7 +25,7 @@ export class GameError extends Error {
     const errorWithCapture = Error as typeof Error & {
       captureStackTrace?: (target: object, constructor: unknown) => void;
     };
-    if (errorWithCapture.captureStackTrace) {
+    if (typeof errorWithCapture.captureStackTrace === 'function') {
       errorWithCapture.captureStackTrace(this, GameError);
     }
   }

@@ -19,7 +19,7 @@ interface ScenarioSelectProps {
   /** The highest scenario id the player has unlocked (1-based). */
   readonly unlockedUpTo: number;
   /** Scenario list for the currently selected pet type. */
-  readonly scenarios: ReadonlyArray<ScenarioConfig>;
+  readonly scenarios: readonly ScenarioConfig[];
   /** Currently selected pet — determines the icon shown on each card. */
   readonly petType: PetType;
   /** Called when the player chooses a scenario. */
@@ -56,7 +56,7 @@ export function ScenarioSelect({
           return (
             <button
               key={s.id}
-              onClick={() => !locked && onSelect(s.id)}
+      onClick={() => { if (!locked) onSelect(s.id); }}
               disabled={locked}
               aria-label={locked ? `Scenario ${s.id}: ${s.name} (locked)` : `Play ${s.name}`}
               className={[

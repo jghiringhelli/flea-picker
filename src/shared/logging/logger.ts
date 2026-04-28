@@ -21,7 +21,7 @@ interface LogEntry {
   readonly timestamp: string;
 }
 
-const isDev = typeof import.meta !== 'undefined' && import.meta.env?.DEV === true;
+const isDev = import.meta.env.DEV;
 
 function formatEntry(entry: LogEntry): string {
   const base = `[${entry.timestamp}] [${entry.level.toUpperCase()}] [${entry.module}] ${entry.message}`;

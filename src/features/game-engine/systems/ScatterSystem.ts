@@ -93,11 +93,11 @@ export class ScatterSystem implements System {
   ): void {
     const candidateIds = world.query([COMPONENT_KEYS.POSITION, COMPONENT_KEYS.JUMP_STATE]);
 
-    const nearby: Array<{ id: EntityId; distance: number }> = [];
+    const nearby: { id: EntityId; distance: number }[] = [];
 
     for (const id of candidateIds) {
       const jumpState = world.getComponent<JumpStateComponent>(id, COMPONENT_KEYS.JUMP_STATE);
-      if (!jumpState || jumpState.state !== 'idle') continue;
+      if (jumpState?.state !== 'idle') continue;
 
       const pos = world.getComponent<PositionComponent>(id, COMPONENT_KEYS.POSITION);
       if (!pos) continue;

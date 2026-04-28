@@ -12,7 +12,7 @@
  * bus.publish('SCATTER_EVENT', { x: 100, y: 200, radius: 80 });
  */
 
-export type EventPayloadMap = {
+export interface EventPayloadMap {
   SCATTER_EVENT: { x: number; y: number; radius: number };
   FLEA_CAUGHT: { entityId: string; scorePoints: number; x: number; y: number };
   FLEA_MISSED: { x: number; y: number };
@@ -22,7 +22,7 @@ export type EventPayloadMap = {
   ADD_TIME: { seconds: number };
   POWER_UP_ACTIVATED: { powerUpId: string };
   BUMP_EVENT: { dx: number; dy: number };
-};
+}
 
 export type EventName = keyof EventPayloadMap;
 type Listener<T extends EventName> = (payload: EventPayloadMap[T]) => void;
@@ -31,15 +31,13 @@ export class EventBus {
   private static instance: EventBus | undefined;
   private readonly listeners = new Map<EventName, Set<Listener<EventName>>>();
 
-  private constructor() {}
+  private constructor() { /* singleton — no initialization needed */ }
 
   /**
    * Returns the singleton EventBus instance.
    */
   static getInstance(): EventBus {
-    if (!EventBus.instance) {
-      EventBus.instance = new EventBus();
-    }
+    EventBus.instance ??= new EventBus();
     return EventBus.instance;
   }
 
@@ -61,7 +59,9 @@ export class EventBus {
     if (!this.listeners.has(name)) {
       this.listeners.set(name, new Set());
     }
-    const set = this.listeners.get(name)!;
+    // listeners.get is guaranteed non-null — we just ensured the key exists above
+    const set = this.listeners.get(name) ?? new Set<Listener<EventName>>();
+    this.listeners.set(name, set);
     set.add(listener as Listener<EventName>);
 
     return () => {

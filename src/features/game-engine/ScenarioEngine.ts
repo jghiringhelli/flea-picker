@@ -41,7 +41,7 @@ export class ScenarioEngine {
   private readonly bus: EventBus;
   private readonly callbacks: EngineCallbacks;
   private readonly renderer: CanvasRenderer | null;
-  private readonly unsubs: Array<() => void> = [];
+  private readonly unsubs: (() => void)[] = [];
 
   // Timer state
   private timeRemainingMs: number;
@@ -102,7 +102,7 @@ export class ScenarioEngine {
   stop(): void {
     this.running = false;
     cancelAnimationFrame(this.rafId);
-    this.unsubs.forEach((fn) => fn());
+    this.unsubs.forEach((fn) => { fn(); });
     this.world.dispose();
   }
 
@@ -133,7 +133,8 @@ export class ScenarioEngine {
   /** Extend the comb path as a straight line from the anchor point, capped at max length. */
   onCombMove(x: number, y: number): void {
     if (!this.isCombActive || this.combPath.length === 0) return;
-    const anchor = this.combPath[0]!;
+    const anchor = this.combPath[0];
+    if (!anchor) return;
     const dx = x - anchor.x;
     const dy = y - anchor.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
@@ -157,7 +158,7 @@ export class ScenarioEngine {
   }
 
   /** Current comb path for rendering while dragging. */
-  getCombPath(): ReadonlyArray<Point> {
+  getCombPath(): readonly Point[] {
     return this.combPath;
   }
 
@@ -224,7 +225,7 @@ export class ScenarioEngine {
         this.callbacks.onTimeTick(secNow);
         this.lastReportedSec = secNow;
       }
-      if (this.timeRemainingMs <= 0 && this.running) {
+      if (this.timeRemainingMs <= 0) {
         this.callbacks.onTimerExpired();
         this.stop();
       }

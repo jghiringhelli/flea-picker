@@ -33,7 +33,7 @@ export interface LoopClock {
 /** Default clock that delegates to requestAnimationFrame. */
 const browserClock: LoopClock = {
   schedule: (cb) => requestAnimationFrame(cb),
-  cancel: (h) => cancelAnimationFrame(h),
+  cancel: (h) => { cancelAnimationFrame(h); },
   now: () => performance.now(),
 };
 

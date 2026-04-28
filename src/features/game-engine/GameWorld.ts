@@ -93,6 +93,7 @@ export class GameWorld {
    * @param component - The component value.
    * @throws EntityNotFoundError if the entity does not exist.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   addComponent<T>(id: EntityId, key: string, component: T): void {
     if (!this.entities.has(id)) {
       throw new EntityNotFoundError(id, MODULE);
@@ -107,6 +108,7 @@ export class GameWorld {
    * @param key - Component type key.
    * @returns The component value, or `undefined` if not attached.
    */
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   getComponent<T>(id: EntityId, key: string): T | undefined {
     const registry = this.registries.get(key) as ComponentRegistry<T> | undefined;
     return registry?.get(id);
@@ -141,7 +143,7 @@ export class GameWorld {
    * @param keys - Component keys the entity must possess.
    * @returns A snapshot array of matching EntityIds.
    */
-  query(keys: ReadonlyArray<string>): ReadonlyArray<EntityId> {
+  query(keys: readonly string[]): readonly EntityId[] {
     if (keys.length === 0) {
       return Array.from(this.entities);
     }
@@ -176,7 +178,7 @@ export class GameWorld {
   /**
    * Registered system names, in execution order.
    */
-  get systemNames(): ReadonlyArray<string> {
+  get systemNames(): readonly string[] {
     return this.systems.map((s) => s.name);
   }
 

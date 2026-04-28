@@ -21,7 +21,7 @@ import type { PositionComponent } from '../components/PositionComponent';
 import type { JumpStateComponent } from '../components/JumpStateComponent';
 import type { HealthComponent } from '../components/HealthComponent';
 import type { ScoreService } from '../services/ScoreService';
-import { EventBus } from '@/shared/events/EventBus';
+import type { EventBus } from '@/shared/events/EventBus';
 import { distanceBetween, samplePath, type Point } from '../utils/geometry';
 import type { FrozenComponent } from '../components/FrozenComponent';
 import {
@@ -36,9 +36,9 @@ import {
   FLEA_SPRAY_DURATION_MS,
 } from '@config/constants';
 
-type TweezerEvent = { readonly type: 'tweezers'; readonly x: number; readonly y: number };
-type CombEvent = { readonly type: 'comb'; readonly points: ReadonlyArray<Point> };
-type SprayEvent = { readonly type: 'spray'; readonly x: number; readonly y: number };
+interface TweezerEvent { readonly type: 'tweezers'; readonly x: number; readonly y: number }
+interface CombEvent { readonly type: 'comb'; readonly points: readonly Point[] }
+interface SprayEvent { readonly type: 'spray'; readonly x: number; readonly y: number }
 type InputEvent = TweezerEvent | CombEvent | SprayEvent;
 
 export class ToolInteractionSystem implements System {
@@ -66,7 +66,7 @@ export class ToolInteractionSystem implements System {
   }
 
   /** Queue a completed comb drag path (called on mouse-up). */
-  queueCombPath(points: ReadonlyArray<Point>): void {
+  queueCombPath(points: readonly Point[]): void {
     this.inputQueue.push({ type: 'comb', points });
   }
 
@@ -125,7 +125,8 @@ export class ToolInteractionSystem implements System {
     }
 
     if (closestId !== null) {
-      const pos = world.getComponent<PositionComponent>(closestId, COMPONENT_KEYS.POSITION)!;
+      const pos = world.getComponent<PositionComponent>(closestId, COMPONENT_KEYS.POSITION);
+      if (!pos) return; // shouldn't happen — closestId was found via position query
       this.catchFlea(world, closestId, pos.x, pos.y);
       this.tweezersCooldownMs = TWEEZERS_COOLDOWN_MS;
     } else {
@@ -135,13 +136,14 @@ export class ToolInteractionSystem implements System {
     }
   }
 
-  private processCombPath(world: GameWorld, points: ReadonlyArray<Point>): void {
+  private processCombPath(world: GameWorld, points: readonly Point[]): void {
     if (this.combCooldownMs > 0) return;
     if (!this.config.availableTools.includes('comb')) return;
     if (points.length < 2) return;
 
-    const first = points[0]!;
-    const last = points[points.length - 1]!;
+    const first = points[0];
+    const last = points[points.length - 1];
+    if (!first || !last) return;
 
     // Invalid tap: too short — trigger scatter as penalty.
     if (distanceBetween(first, last) < COMB_MIN_DRAG_PX) {
@@ -173,7 +175,8 @@ export class ToolInteractionSystem implements System {
 
     if (caught.size > 0) {
       for (const id of caught) {
-        const pos = world.getComponent<PositionComponent>(id, COMPONENT_KEYS.POSITION)!;
+        const pos = world.getComponent<PositionComponent>(id, COMPONENT_KEYS.POSITION);
+        if (!pos) continue;
         this.catchFlea(world, id, pos.x, pos.y);
       }
       this.combCooldownMs = COMB_COOLDOWN_MS;
@@ -209,7 +212,7 @@ export class ToolInteractionSystem implements System {
     for (const id of ids) {
       const pos = world.getComponent<PositionComponent>(id, COMPONENT_KEYS.POSITION);
       const health = world.getComponent<HealthComponent>(id, COMPONENT_KEYS.HEALTH);
-      if (!pos || !health || !health.alive) continue;
+      if (!pos || !health?.alive) continue;
 
       const dist = distanceBetween({ x, y }, { x: pos.x, y: pos.y });
       if (dist <= SPRAY_RADIUS_PX) {
